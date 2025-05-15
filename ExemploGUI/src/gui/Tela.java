@@ -1,11 +1,12 @@
 package gui;
 
 import bus.Caixa;
-
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Tela extends JFrame
+public class Tela extends JFrame implements ActionListener
 {
     private Dimension dLable, dTextField, dTxtArea, dFrame, dButton;
     private Label lblValor, lblSaldo;
@@ -37,21 +38,25 @@ public class Tela extends JFrame
         cmdDepositar = new Button("Depositar");
         cmdDepositar.setSize(dButton);
         cmdDepositar.setLocation(25,150);
+        cmdDepositar.addActionListener(this);
         add(cmdDepositar);
 
         cmdDSacar = new Button("Sacar");
         cmdDSacar.setSize(dButton);
         cmdDSacar.setLocation(225,150);
+        cmdDSacar.addActionListener(this);
         add(cmdDSacar);
 
         cmdConsultar = new Button("Consultar");
         cmdConsultar.setSize(dButton);
         cmdConsultar.setLocation(25,185);
+        cmdConsultar.addActionListener(this);
         add(cmdConsultar);
 
         cmdSair = new Button("Sair");
         cmdSair.setSize(dButton);
         cmdSair.setLocation(225,185);
+        cmdSair.addActionListener(this);
         add(cmdSair);
     }
 
@@ -93,5 +98,59 @@ public class Tela extends JFrame
         dTextField = new Dimension(150, 20);
         dButton = new Dimension(95,20);
         dTxtArea = new Dimension(300,140);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        if (e.getSource() == cmdDepositar){
+            //logica do depositar aqui
+            try {
+                double valor = Double.parseDouble(txtValor.getText());
+                caixa.depositar(valor);
+                txtMsg.append("Deposito efetuado com sucesso! Valor" + valor + "\n");
+                JOptionPane.showMessageDialog(null, "Sucesso ao depositar" ,"Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                txtValor.setText(null);
+                txtValor.requestFocus();
+
+                return;
+
+            }catch (Exception erro){
+                JOptionPane.showMessageDialog(null,"Sucesso, depositado", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                txtValor.setText("");
+                txtValor.requestFocus();
+                return;
+            }
+        }
+        if (e.getSource() == cmdDSacar){
+            //logica do sacar aqui
+            try {
+                double valor = Double.parseDouble(txtValor.getText());
+                caixa.sacar(valor);
+                txtMsg.append("Saque efetuado com sucesso! Valor" + valor + "\n");
+                JOptionPane.showMessageDialog(null, "Sucesso ao Sacar" ,"Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                txtValor.setText(null);
+                txtValor.requestFocus();
+                return;
+
+            }catch (Exception erro){
+                JOptionPane.showMessageDialog(null,"Sucesso, sacado", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+                txtValor.setText("");
+                txtValor.requestFocus();
+                return;
+            }
+        }
+        if (e.getSource() == cmdConsultar){
+            //logica do consultar aqui
+            double saldo = caixa.getSaldo();
+            txtSaldo.setText(Double.toString(saldo));
+            txtMsg.append("Saldo consultado atual: " + saldo + "\n");
+            JOptionPane.showMessageDialog(null, "Consulta Saldo", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+        if (e.getSource() == cmdSair){
+            //logica do sair aqui
+            System.exit(0);
+        }
     }
 }
